@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Listing Website</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    .filter-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .filter-section input, .filter-section select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      flex: 1 1 200px;
+    }
+    .filter-section button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .filter-section button:hover {
+      background-color: #0056b3;
+    }
+    .job-category {
+      margin-bottom: 30px;
+    }
+    .job-category h2 {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 0 0 10px 0;
+    }
+    .job-subcategory {
+      margin-bottom: 20px;
+    }
+    .job-subcategory h3 {
+      color: #007BFF;
+      margin: 0 0 10px 0;
+    }
+    .job-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+    }
+    .job-item {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .job-item h4 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    .job-item p {
+      margin: 5px 0;
+      color: #555;
+    }
+    @media (max-width: 600px) {
+      .filter-section {
+        flex-direction: column;
+      }
+      .filter-section input, .filter-section select {
+        width: 100%;
+      }
+    }
+  </style>
+
+<style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    nav {
+      background: #0056b3;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 18px;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: #FFD700;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    .filter-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .filter-section input, .filter-section select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      flex: 1 1 200px;
+    }
+    .filter-section button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .filter-section button:hover {
+      background-color: #0056b3;
+    }
+    .job-category {
+      margin-bottom: 30px;
+    }
+    .job-category h2 {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 0 0 10px 0;
+    }
+    .job-subcategory h3 {
+      color: #007BFF;
+      margin: 0 0 10px 0;
+    }
+    .job-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+    }
+    .job-item {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .job-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    footer {
+      background: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .filter-section {
+        flex-direction: column;
+      }
+      .filter-section input, .filter-section select {
+        width: 100%;
+      }
+    }
+  </style>
+  
+</head>
+<body>
+    <header>Job Listing Website</header>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Jobs</a>
+      <a href="#">Post a Job</a>
+      <a href="#">Contact</a>
+    </nav>
+  <div class="container">
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <input type="text" id="search" placeholder="Search jobs..." oninput="filterJobs()">
+      <select id="category" onchange="filterJobs()">
+        <option value="">All Categories</option>
+        <option value="Civil">Civil Engineering</option>
+        <option value="Computer">Computer Science</option>
+        <option value="Mechanical">Mechanical Engineering</option>
+        <option value="Electrical">Electrical Engineering</option>
+      </select>
+      <select id="subcategory" onchange="filterJobs()">
+        <option value="">All Subcategories</option>
+        <option value="Structural Engineer">Structural Engineer</option>
+        <option value="Data Scientist">Data Scientist</option>
+        <option value="Web Developer">Web Developer</option>
+        <option value="HVAC Engineer">HVAC Engineer</option>
+      </select>
+      <select id="location" onchange="filterJobs()">
+        <option value="">All Locations</option>
+        <option value="New York">New York</option>
+        <option value="San Francisco">San Francisco</option>
+        <option value="Remote">Remote</option>
+      </select>
+      <select id="job-type" onchange="filterJobs()">
+        <option value="">All Job Types</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Part-time">Part-time</option>
+        <option value="Contract">Contract</option>
+      </select>
+      <button onclick="clearFilters()">Clear Filters</button>
+    </div>
+
+    <!-- Job Categories -->
+    <div id="job-listings">
+      <!-- Jobs will be dynamically loaded here -->
+    </div>
+  </div>
+
+  <script>
+    // Sample JSON data for jobs
+    const jobs = [
+      {
+        title: "Structural Engineer",
+        company: "ABC Corp",
+        location: "New York",
+        salary: "$80,000 - $100,000",
+        type: "Full-time",
+        category: "Civil",
+        subcategory: "Structural Engineer"
+      },
+      {
+        title: "Data Scientist",
+        company: "XYZ Tech",
+        location: "San Francisco",
+        salary: "$90,000 - $120,000",
+        type: "Full-time",
+        category: "Computer",
+        subcategory: "Data Scientist"
+      },
+      {
+        title: "Web Developer",
+        company: "Web Solutions",
+        location: "Remote",
+        salary: "$70,000 - $90,000",
+        type: "Contract",
+        category: "Computer",
+        subcategory: "Web Developer"
+      },
+      {
+        title: "HVAC Engineer",
+        company: "Cooling Systems Inc",
+        location: "New York",
+        salary: "$75,000 - $95,000",
+        type: "Full-time",
+        category: "Mechanical",
+        subcategory: "HVAC Engineer"
+      },
+      {
+        title: "Electrical Engineer",
+        company: "Power Grid Corp",
+        location: "San Francisco",
+        salary: "$85,000 - $110,000",
+        type: "Part-time",
+        category: "Electrical",
+        subcategory: "Electrical Engineer"
+      }
+    ];
+
+    // Function to load jobs dynamically
+    function loadJobs() {
+      const jobListings = document.getElementById('job-listings');
+      jobListings.innerHTML = '';
+
+      const categories = [...new Set(jobs.map(job => job.category))];
+      categories.forEach(category => {
+        const categoryJobs = jobs.filter(job => job.category === category);
+        const subcategories = [...new Set(categoryJobs.map(job => job.subcategory))];
+
+        const categoryHTML = `
+          <div class="job-category">
+            <h2>${category}</h2>
+            ${subcategories.map(subcategory => `
+              <div class="job-subcategory">
+                <h3>${subcategory}</h3>
+                <div class="job-list">
+                  ${categoryJobs
+                    .filter(job => job.subcategory === subcategory)
+                    .map(job => `
+                      <div class="job-item" data-category="${job.category}" data-subcategory="${job.subcategory}" data-location="${job.location}" data-type="${job.type}">
+                        <h4>${job.title} at ${job.company}</h4>
+                        <p><strong>Location:</strong> ${job.location}</p>
+                        <p><strong>Salary:</strong> ${job.salary}</p>
+                        <p><strong>Job Type:</strong> ${job.type}</p>
+                      </div>
+                    `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        jobListings.innerHTML += categoryHTML;
+      });
+    }
+
+    // Function to filter jobs
+    function filterJobs() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const category = document.getElementById('category').value;
+      const subcategory = document.getElementById('subcategory').value;
+      const location = document.getElementById('location').value;
+      const jobType = document.getElementById('job-type').value;
+
+      const jobItems = document.querySelectorAll('.job-item');
+      jobItems.forEach(item => {
+        const jobCategory = item.getAttribute('data-category');
+        const jobSubcategory = item.getAttribute('data-subcategory');
+        const jobLocation = item.getAttribute('data-location');
+        const jobTypeAttr = item.getAttribute('data-type');
+        const jobText = item.textContent.toLowerCase();
+
+        const matchesSearch = jobText.includes(search);
+        const matchesCategory = category === '' || jobCategory === category;
+        const matchesSubcategory = subcategory === '' || jobSubcategory === subcategory;
+        const matchesLocation = location === '' || jobLocation === location;
+        const matchesJobType = jobType === '' || jobTypeAttr === jobType;
+
+        if (matchesSearch && matchesCategory && matchesSubcategory && matchesLocation && matchesJobType) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Function to clear filters
+    function clearFilters() {
+      document.getElementById('search').value = '';
+      document.getElementById('category').value = '';
+      document.getElementById('subcategory').value = '';
+      document.getElementById('location').value = '';
+      document.getElementById('job-type').value = '';
+      filterJobs();
+    }
+
+    // Load jobs on page load
+    loadJobs();
+  </script>
+</body>
+</html>
