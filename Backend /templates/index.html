@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>NIFTY 50 Live Prices</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function fetchLiveData() {
+            fetch('/get_live_data')
+                .then(response => response.json())
+                .then(data => {
+                    let html = "<table><tr><th>Stock</th><th>Price</th><th>Time</th></tr>";
+                    data.forEach(row => {
+                        html += `<tr><td>${row.symbol}</td><td>${row.price}</td><td>${row.timestamp}</td></tr>`;
+                    });
+                    html += "</table>";
+                    document.getElementById('live_data').innerHTML = html;
+                });
+        }
+        setInterval(fetchLiveData, 1000);
+    </script>
+</head>
+<body>
+    <h2>NIFTY 50 Live Prices</h2>
+    <div id="live_data"></div>
+</body>
+</html>
