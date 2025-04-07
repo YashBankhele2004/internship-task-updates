@@ -1,0 +1,300 @@
+Last login: Thu Feb 27 18:22:30 on ttys000
+dhananjay_survase_@Dhananjays-MacBook-Air ~ % mysql -u root -p
+
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 9.2.0 Homebrew
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE student_management;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> USE student_management;
+Database changed
+mysql> CREATE TABLE students (
+    ->     student_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     first_name VARCHAR(50),
+    ->     last_name VARCHAR(50),
+    ->     email VARCHAR(100) UNIQUE,
+    ->     birth_date DATE,
+    ->     enrollment_date DATE
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE courses (
+    ->     course_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     course_name VARCHAR(100),
+    ->     course_code VARCHAR(20) UNIQUE,
+    ->     credits INT
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE enrollments (
+    ->     enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     student_id INT,
+    ->     course_id INT,
+    ->     grade VARCHAR(5),
+    ->     FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    ->     FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE instructors (
+    ->     instructor_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     first_name VARCHAR(50),
+    ->     last_name VARCHAR(50),
+    ->     email VARCHAR(100) UNIQUE
+    -> );
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE TABLE course_instructors (
+    ->     course_id INT,
+    ->     instructor_id INT,
+    ->     PRIMARY KEY (course_id, instructor_id),
+    ->     FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
+    ->     FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO students (first_name, last_name, email, birth_date, enrollment_date) VALUES
+    -> ('Alice', 'Smith', 'alice.smith@example.com', '2000-05-14', '2023-08-20'),
+    -> ('Bob', 'Johnson', 'bob.johnson@example.com', '1999-11-22', '2023-08-20'),
+    -> ('Charlie', 'Brown', 'charlie.brown@example.com', '2001-07-30', '2023-08-21'),
+    -> ('David', 'Miller', 'david.miller@example.com', '2000-02-10', '2023-08-22'),
+    -> ('Emma', 'Davis', 'emma.davis@example.com', '1999-06-15', '2023-08-23');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO courses (course_name, course_code, credits) VALUES
+    -> ('Database Systems', 'DB101', 4),
+    -> ('Operating Systems', 'OS201', 3),
+    -> ('Computer Networks', 'CN301', 3),
+    -> ('Software Engineering', 'SE401', 4),
+    -> ('Machine Learning', 'ML501', 4);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO enrollments (student_id, course_id, grade) VALUES
+    -> (1, 1, 'A'),
+    -> (2, 1, 'B'),
+    -> (3, 2, 'A'),
+    -> (4, 3, NULL),
+    -> (5, 3, NULL),
+    -> (1, 4, 'B+'),
+    -> (2, 5, 'A'),
+    -> (3, 5, 'B-'),
+    -> (4, 2, NULL),
+    -> (5, 1, 'C');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO instructors (first_name, last_name, email) VALUES
+    -> ('Dr. John', 'Williams', 'john.williams@example.com'),
+    -> ('Dr. Susan', 'White', 'susan.white@example.com'),
+    -> ('Dr. Mark', 'Taylor', 'mark.taylor@example.com');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO course_instructors (course_id, instructor_id) VALUES
+    -> (1, 1),
+    -> (2, 2),
+    -> (3, 3),
+    -> (4, 1),
+    -> (5, 2);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM students;
++------------+------------+-----------+---------------------------+------------+-----------------+
+| student_id | first_name | last_name | email                     | birth_date | enrollment_date |
++------------+------------+-----------+---------------------------+------------+-----------------+
+|          1 | Alice      | Smith     | alice.smith@example.com   | 2000-05-14 | 2023-08-20      |
+|          2 | Bob        | Johnson   | bob.johnson@example.com   | 1999-11-22 | 2023-08-20      |
+|          3 | Charlie    | Brown     | charlie.brown@example.com | 2001-07-30 | 2023-08-21      |
+|          4 | David      | Miller    | david.miller@example.com  | 2000-02-10 | 2023-08-22      |
+|          5 | Emma       | Davis     | emma.davis@example.com    | 1999-06-15 | 2023-08-23      |
++------------+------------+-----------+---------------------------+------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT s.student_id, s.first_name, s.last_name
+    -> FROM students s
+    -> JOIN enrollments e ON s.student_id = e.student_id
+    -> JOIN courses c ON e.course_id = c.course_id
+    -> WHERE c.course_name = 'Database Systems';
++------------+------------+-----------+
+| student_id | first_name | last_name |
++------------+------------+-----------+
+|          1 | Alice      | Smith     |
+|          2 | Bob        | Johnson   |
+|          5 | Emma       | Davis     |
++------------+------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT s.student_id, s.first_name, s.last_name
+    -> FROM students s
+    -> JOIN enrollments e ON s.student_id = e.student_id
+    -> WHERE e.grade IS NULL;
++------------+------------+-----------+
+| student_id | first_name | last_name |
++------------+------------+-----------+
+|          4 | David      | Miller    |
+|          5 | Emma       | Davis     |
+|          4 | David      | Miller    |
++------------+------------+-----------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT AVG(CASE 
+    ->             WHEN grade = 'A' THEN 4.0
+    ->             WHEN grade = 'B+' THEN 3.5
+    ->             WHEN grade = 'B' THEN 3.0
+    ->             WHEN grade = 'B-' THEN 2.5
+    ->             WHEN grade = 'C' THEN 2.0
+    ->             ELSE NULL
+    ->           END) AS avg_grade
+    -> FROM enrollments e
+    -> JOIN courses c ON e.course_id = c.course_id
+    -> WHERE c.course_name = 'Database Systems';
++-----------+
+| avg_grade |
++-----------+
+|   3.00000 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT c.course_name, COUNT(e.student_id) AS num_students
+    -> FROM courses c
+    -> JOIN enrollments e ON c.course_id = e.course_id
+    -> GROUP BY c.course_name
+    -> HAVING COUNT(e.student_id) > 3;
+Empty set (0.00 sec)
+
+mysql> SELECT i.first_name, i.last_name
+    -> FROM instructors i
+    -> JOIN course_instructors ci ON i.instructor_id = ci.instructor_id
+    -> JOIN courses c ON ci.course_id = c.course_id
+    -> WHERE c.course_name = 'Database Systems';
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| Dr. John   | Williams  |
++------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT c.course_name, COUNT(e.student_id) AS num_students
+    -> FROM courses c
+    -> JOIN enrollments e ON c.course_id = e.course_id
+    -> GROUP BY c.course_name
+    -> ORDER BY num_students DESC
+    -> LIMIT 1;
++------------------+--------------+
+| course_name      | num_students |
++------------------+--------------+
+| Database Systems |            3 |
++------------------+--------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT s.student_id, s.first_name, s.last_name
+    -> FROM students s
+    -> WHERE NOT EXISTS (
+    ->     SELECT 1 FROM enrollments e
+    ->     WHERE e.student_id = s.student_id AND e.grade IS NULL
+    -> );
++------------+------------+-----------+
+| student_id | first_name | last_name |
++------------+------------+-----------+
+|          1 | Alice      | Smith     |
+|          2 | Bob        | Johnson   |
+|          3 | Charlie    | Brown     |
++------------+------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT s.student_id, s.first_name, s.last_name
+    -> FROM students s
+    -> WHERE NOT EXISTS (
+    ->     SELECT 1 FROM enrollments e
+    ->     WHERE e.student_id = s.student_id AND e.grade IS NULL
+    -> );
++------------+------------+-----------+
+| student_id | first_name | last_name |
++------------+------------+-----------+
+|          1 | Alice      | Smith     |
+|          2 | Bob        | Johnson   |
+|          3 | Charlie    | Brown     |
++------------+------------+-----------+
+3 rows in set (0.01 sec)
+
+mysql> UPDATE students 
+    -> SET email = 'new.email@example.com' 
+    -> WHERE student_id = 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> DELETE FROM students 
+    -> WHERE student_id NOT IN (SELECT student_id FROM enrollments);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT s.first_name, s.last_name, c.course_name, e.grade
+    -> FROM students s
+    -> JOIN enrollments e ON s.student_id = e.student_id
+    -> JOIN courses c ON e.course_id = c.course_id;
++------------+-----------+----------------------+-------+
+| first_name | last_name | course_name          | grade |
++------------+-----------+----------------------+-------+
+| Alice      | Smith     | Database Systems     | A     |
+| Alice      | Smith     | Software Engineering | B+    |
+| Bob        | Johnson   | Database Systems     | B     |
+| Bob        | Johnson   | Machine Learning     | A     |
+| Charlie    | Brown     | Operating Systems    | A     |
+| Charlie    | Brown     | Machine Learning     | B-    |
+| David      | Miller    | Computer Networks    | NULL  |
+| David      | Miller    | Operating Systems    | NULL  |
+| Emma       | Davis     | Computer Networks    | NULL  |
+| Emma       | Davis     | Database Systems     | C     |
++------------+-----------+----------------------+-------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT s.student_id, s.first_name, s.last_name, SUM(c.credits) AS total_credits
+    -> FROM students s
+    -> JOIN enrollments e ON s.student_id = e.student_id
+    -> JOIN courses c ON e.course_id = c.course_id
+    -> WHERE s.student_id = 1
+    -> GROUP BY s.student_id;
++------------+------------+-----------+---------------+
+| student_id | first_name | last_name | total_credits |
++------------+------------+-----------+---------------+
+|          1 | Alice      | Smith     |             8 |
++------------+------------+-----------+---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT s.student_id, s.first_name, s.last_name, AVG(
+    ->     CASE 
+    ->         WHEN e.grade = 'A' THEN 4.0
+    ->         WHEN e.grade = 'B+' THEN 3.5
+    ->         WHEN e.grade = 'B' THEN 3.0
+    ->         WHEN e.grade = 'B-' THEN 2.5
+    ->         WHEN e.grade = 'C' THEN 2.0
+    ->         ELSE NULL
+    ->     END) AS avg_grade
+    -> FROM students s
+    -> JOIN enrollments e ON s.student_id = e.student_id
+    -> GROUP BY s.student_id
+    -> ORDER BY avg_grade DESC
+    -> LIMIT 3;
++------------+------------+-----------+-----------+
+| student_id | first_name | last_name | avg_grade |
++------------+------------+-----------+-----------+
+|          1 | Alice      | Smith     |   3.75000 |
+|          2 | Bob        | Johnson   |   3.50000 |
+|          3 | Charlie    | Brown     |   3.25000 |
++------------+------------+-----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> 

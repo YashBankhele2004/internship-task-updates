@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Puzzle Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #game-container { display: grid; gap: 2px; border: 2px solid black; margin: auto; }
+        .tile { cursor: pointer; border: 1px solid #ccc; background-size: 100% 100%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; }
+        .tile.empty { background: none; border: none; cursor: default; }
+        .tile:hover { opacity: 0.8; }
+        #controls { margin: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Image Puzzle</h1>
+    <input type="file" id="upload-image" accept="image/*">
+    <div id="controls">
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty">
+            <option value="3">3x3</option>
+            <option value="4">4x4</option>
+            <option value="5">5x5</option>
+        </select>
+        <button onclick="startGame()">Start Game</button>
+        <p>Moves: <span id="move-counter">0</span></p>
+        <p>Time: <span id="timer">0</span>s</p>
+    </div>
+    <div id="game-container"></div>
+
+    <script>
+        let gridSize = 3, moves = 0, timer = 0, interval;
+        let imageSrc = "default.jpg";
+        const gameContainer = document.getElementById("game-container");
+        let tiles = [], emptyTile;
+
+        document.getElementById("upload-image").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                imageSrc = URL.createObjectURL(file);
+            }
+        });
+        
+        function startGame() {
+            gridSize = parseInt(document.getElementById("difficulty").value);
+            moves = 0; timer = 0;
+            document.getElementById("move-counter").innerText = moves;
+            clearInterval(interval);
+            interval = setInterval(() => { document.getElementById("timer").innerText = ++timer; }, 1000);
+            setupGrid();
+        }
+        
+        function setupGrid() {
+            gameContainer.innerHTML = "";
+            gameContainer.style.width = gameContainer.style.height = `${gridSize * 100}px`;
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            gameContainer.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+            
+            tiles = [];
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    if (row === gridSize - 1 && col === gridSize - 1) {
+                        emptyTile = document.createElement("div");
+                        emptyTile.classList.add("tile", "empty");
+                        emptyTile.style.width = emptyTile.style.height = "100px";
+                        tiles.push(emptyTile);
+                        continue;
+                    }
+                    let tile = document.createElement("div");
+                    tile.classList.add("tile");
+                    tile.style.width = tile.style.height = "100px";
+                    tile.style.backgroundImage = `url('${imageSrc}')`;
+                    tile.style.backgroundSize = `${gridSize * 100}px ${gridSize * 100}px`;
+                    tile.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
+                    tile.setAttribute("data-index", row * gridSize + col);
+                    tile.innerText = row * gridSize + col + 1;
+                    tile.addEventListener("click", moveTile);
+                    tiles.push(tile);
+                }
+            }
+            shuffleArray(tiles);
+            tiles.forEach(tile => gameContainer.appendChild(tile));
+        }
+        
+        function shuffleArray(array) {
+            do {
+                for (let i = array.length - 1; i > 0; i--) {
+                    let j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            } while (!isSolvable(array));
+        }
+        
+        function isSolvable(tiles) {
+            let inversions = 0;
+            let tileNumbers = tiles.map(tile => tile.classList.contains("empty") ? 0 : parseInt(tile.innerText));
+            for (let i = 0; i < tileNumbers.length; i++) {
+                for (let j = i + 1; j < tileNumbers.length; j++) {
+                    if (tileNumbers[i] > tileNumbers[j] && tileNumbers[j] !== 0) {
+                        inversions++;
+                    }
+                }
+            }
+            return inversions % 2 === 0;
+        }
+        
+        function moveTile(event) {
+            let tile = event.target;
+            if (tile.classList.contains("empty")) return;
+            let tileIndex = tiles.indexOf(tile);
+            let emptyIndex = tiles.indexOf(emptyTile);
+            let diff = Math.abs(tileIndex - emptyIndex);
+            if (diff === 1 || diff === gridSize) {
+                [tiles[tileIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[tileIndex]];
+                gameContainer.innerHTML = "";
+                tiles.forEach(tile => gameContainer.appendChild(tile));
+                moves++;
+                document.getElementById("move-counter").innerText = moves;
+                checkWin();
+            }
+        }
+        
+        function checkWin() {
+            let correct = true;
+            for (let i = 0; i < tiles.length - 1; i++) {
+                if (parseInt(tiles[i].getAttribute("data-index")) !== i) {
+                    correct = false;
+                    break;
+                }
+            }
+            if (correct) {
+                clearInterval(interval);
+                setTimeout(() => alert(`Congratulations! You solved it in ${moves} moves and ${timer} seconds.`), 200);
+            }
+        }
+    </script>
+</body>
+</html>

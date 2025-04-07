@@ -1,0 +1,141 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  body.dark-mode {
+    background-color: #1a1a1a;
+    color: #f4f4f9;
+  }
+  
+  .container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    transition: background-color 0.3s;
+  }
+  
+  .dark-mode .container {
+    background: #2c2c2c;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: #6c5ce7;
+  }
+  
+  .theme-toggle {
+    text-align: right;
+    margin-bottom: 1rem;
+  }
+  
+  #theme-btn {
+    background: #6c5ce7;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  #theme-btn:hover {
+    background: #5a4dcc;
+  }
+  
+  .progress-bar {
+    background: #e0e0e0;
+    border-radius: 5px;
+    height: 10px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  
+  #progress {
+    background: #6c5ce7;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+  }
+  
+  .input-section {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  #task-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  #add-btn {
+    background: #6c5ce7;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  #add-btn:hover {
+    background: #5a4dcc;
+  }
+  
+  #task-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #eee;
+    transition: background 0.3s;
+  }
+  
+  .task-item.completed {
+    text-decoration: line-through;
+    color: #888;
+  }
+  
+  .task-item:hover {
+    background: #f9f9f9;
+  }
+  
+  .dark-mode .task-item:hover {
+    background: #3a3a3a;
+  }
+  
+  .delete-btn {
+    background: #ff7675;
+    color: #fff;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .delete-btn:hover {
+    background: #d63031;
+  }
